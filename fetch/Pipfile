@@ -5,6 +5,9 @@ name = "pypi"
 
 [packages]
 requests = "*"
+pymongo = "*"
+python-dateutil = "*"
+black = "*"
 
 [dev-packages]
 black = "*"
