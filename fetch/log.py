@@ -2,7 +2,8 @@ import logging
 import logging.handlers
 import os
 
-LOGFILE = "logs/fetcher.log"
+dirname = os.path.dirname(__file__)
+LOGFILE = os.path.join(dirname, "logs/fetcher.log")
 LOG_LEVEL = logging.DEBUG if os.environ.get("DEBUG") else logging.INFO
 
 # Turn off urllib3 logger
