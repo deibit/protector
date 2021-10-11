@@ -20,7 +20,7 @@ class UsersEntry:
         try:
             self.date = dup.parse(date)
             self.country = country.upper()
-            self.users = users
+            self.users = int(users)
             self.lower = int(lower) if lower else None
             self.upper = int(upper) if upper else None
             self.frac = int(frac) if frac else None
@@ -34,6 +34,7 @@ class UsersEntry:
     def serialize(self) -> dict:
         return {
             "date": self.date,
+            "users": self.users,
             "country": self.country,
             "lower": self.lower,
             "upper": self.upper,
