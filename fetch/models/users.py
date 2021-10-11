@@ -1,11 +1,10 @@
 import dateutil.parser as dup
 
 from log import logger
-from db import connect
-
-from pymongo.collection import Collection
 
 from fetch.models import meta
+
+URL = "https://metrics.torproject.org/userstats-relay-country.csv?start={}&end={}"
 
 
 class UsersEntry:
@@ -53,3 +52,7 @@ def purify(entries: list[str]) -> list[list[str]]:
 
 def last():
     return meta.last("users")
+
+
+def get_class():
+    return UsersEntry

@@ -1,5 +1,4 @@
 import sys
-import time
 
 import requests
 
@@ -7,12 +6,9 @@ from dateutil.relativedelta import relativedelta
 from dateutil.utils import today
 
 from log import logger
-from models import users
+from models import users, bandwidth
 
-
-USERSSTATS = (
-    "https://metrics.torproject.org/userstats-relay-country.csv?start={}&end={}"
-)
+stats = [users, bandwidth]
 
 
 def download(stats_url: str) -> list[str]:
@@ -34,27 +30,35 @@ def download(stats_url: str) -> list[str]:
 
 
 if __name__ == "__main__":
-    init = False
-    last = users.last()
-    if last:
-        past = last["date"]
-        # If we've got a last record then download +1 day past last record
-        past = past + relativedelta(days=+1)
-        from_date = "{}-{}-{}".format(past.year, past.month, past.day)
+    for model in stats:
+        logger.info("Processing stats for model %s", model.__name__)
+        init = False
+        last = model.last()
 
-        now = today()
-        to_date = "{}-{}-{}".format(now.year, now.month, now.day)
+        if last:
+            past = last["date"]
+            # If we've got a last record then download +1 day past last record
+            past = past + relativedelta(days=+1)
+            from_date = "{}-{}-{}".format(past.year, past.month, past.day)
 
-        logger.info("Downloading stats file from %s to %s", from_date, to_date)
-        c = download(USERSSTATS.format(from_date, to_date))
+            now = today()
+            to_date = "{}-{}-{}".format(now.year, now.month, now.day)
 
-    else:
-        logger.info("Downloading complete stats file")
-        init = True
-        c = download(USERSSTATS.split("?")[0])
+            logger.info(
+                "Downloading stats file for %s from %s to %s",
+                model.__name__,
+                from_date,
+                to_date,
+            )
+            c = download(model.URL.format(from_date, to_date))
 
-    c = users.purify(c)
-    if not c:
-        logger.info("Nothing to update")
-        sys.exit()
-    users.ingest([users.UsersEntry(*user) for user in c], init=init)
+        else:
+            logger.info("Downloading complete stats file for %s", model.__name__)
+            init = True
+            c = download(model.URL.split("?")[0])
+
+        c = model.purify(c)
+        if not c:
+            logger.info("Nothing to update on %s", model.__name__)
+        else:
+            model.ingest([model.get_class()(*entry) for entry in c], init=init)
