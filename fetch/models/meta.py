@@ -30,7 +30,9 @@ def ingest(
                     {"$set": entry},
                     upsert=True,
                 )
-        logger.info("Ingested %s/%s users", len(validated), len(entries))
+        logger.info(
+            "Ingested %s/%s entries for %s", len(validated), len(entries), collection
+        )
 
     except Exception as e:
         logger.exception(e)
