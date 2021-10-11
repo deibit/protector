@@ -1,11 +1,10 @@
 import bz2
 import json
-import sqlite3
 import sys
 
 import requests
 
-from .log import logger
+from log import logger
 
 URL = "https://collector.torproject.org/index/index.json.bz2"
 

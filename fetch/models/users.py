@@ -3,8 +3,9 @@ import dateutil.parser as dup
 from log import logger
 from db import connect
 
-import pymongo
 from pymongo.collection import Collection
+
+from fetch.models import meta
 
 
 class UsersEntry:
@@ -24,8 +25,8 @@ class UsersEntry:
             self.lower = int(lower) if lower else None
             self.upper = int(upper) if upper else None
             self.frac = int(frac) if frac else None
+
         except Exception as e:
-            print(date)
             logger.exception(e)
 
     def validate(self) -> bool:
@@ -42,53 +43,13 @@ class UsersEntry:
         }
 
 
-def ingest(users: list[UsersEntry], init=False) -> None:
-    try:
-        validated = [user for user in users if user.validate()]
-        collection: Collection = connect().users
-
-        if init:
-            collection.insert_many([user.serialize() for user in validated])
-
-        else:
-            for entry in validated:
-                entry = entry.serialize()
-                collection.update_one(
-                    {"country": entry["country"], "date": entry["date"]},
-                    {"$set": entry},
-                    upsert=True,
-                )
-        logger.info("Ingested %s/%s users", len(validated), len(users))
-
-    except Exception as e:
-        logger.exception(e)
+def ingest(users: list[UsersEntry], init=False):
+    return meta.ingest(users, "users", filter_fields=["country", "date"], init=init)
 
 
 def purify(entries: list[str]) -> list[list[str]]:
-    tmp = []
-
-    for entry in entries:
-
-        # Skip comment lines
-        if entry.startswith("#"):
-            continue
-
-        # Split str into list of params
-        entry = entry.split(",")
-
-        # Skip entries with less than ',' params
-        if not len(entry) == 6:
-            continue
-
-        # Skip head
-        if entry[0] == "date":
-            continue
-
-        tmp.append(entry)
-
-    return tmp
+    return meta.purify(entries=entries, fields=6, banned=["date", "#"])
 
 
 def last():
-    collection: Collection = connect().users
-    return collection.find_one({}, limit=1, sort=[("_id", pymongo.DESCENDING)])
+    return meta.last("users")
