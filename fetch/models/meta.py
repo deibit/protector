@@ -43,7 +43,10 @@ def ingest(
 
 def last(collection_name: str):
     collection: Collection = connect()[collection_name]
-    return collection.find_one({}, limit=1, sort=[("_id", pymongo.DESCENDING)])
+    last = collection.find_one({}, limit=1, sort=[("_id", pymongo.DESCENDING)])
+    if last:
+        logger.info("Last entry on %s was %s", collection_name, last["date"])
+    return last
 
 
 def purify(entries: list[str], fields: int, banned: list[str]) -> list[list[str]]:

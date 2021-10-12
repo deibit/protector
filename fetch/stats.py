@@ -16,6 +16,7 @@ from models import (
     perfbuild,
     perfroundtrip,
     perfthroughput,
+    applocale,
 )
 
 stats = [
@@ -28,6 +29,7 @@ stats = [
     perfbuild,
     perfroundtrip,
     perfthroughput,
+    applocale,
 ]
 
 
