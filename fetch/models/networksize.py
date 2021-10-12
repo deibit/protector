@@ -5,6 +5,7 @@ from log import logger
 from fetch.models import meta
 
 URL = "https://metrics.torproject.org/networksize.csv?start={}&end={}"
+COLLECTION = "networksize"
 
 
 class NetworkSizeEntry:
@@ -34,7 +35,7 @@ class NetworkSizeEntry:
 
 
 def ingest(entries: list[NetworkSizeEntry], init=False):
-    return meta.ingest(entries, "networksize", filter_fields=["date"], init=init)
+    return meta.ingest(entries, COLLECTION, filter_fields=["date"], init=init)
 
 
 def purify(entries: list[str]) -> list[list[str]]:
@@ -42,7 +43,7 @@ def purify(entries: list[str]) -> list[list[str]]:
 
 
 def last():
-    return meta.last("networksize")
+    return meta.last(COLLECTION)
 
 
 def get_class():
