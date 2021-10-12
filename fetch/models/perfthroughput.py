@@ -4,11 +4,11 @@ from log import logger
 
 from fetch.models import meta
 
-URL = "https://metrics.torproject.org/onionperf-latencies.csv?start={}&end={}"
-COLLECTION = "perfroundtrip"
+URL = "https://metrics.torproject.org/onionperf-throughput.csv?start={}&end={}"
+COLLECTION = "perfthroughput"
 
 
-class PerfRoundtrip:
+class Perfthroughput:
     def __init__(
         self,
         date: str,
@@ -48,7 +48,7 @@ class PerfRoundtrip:
         return self.__dict__
 
 
-def ingest(entries: list[PerfRoundtrip], init=False):
+def ingest(entries: list[Perfthroughput], init=False):
     return meta.ingest(
         entries, COLLECTION, filter_fields=["date", "source", "server"], init=init
     )
@@ -63,4 +63,4 @@ def last():
 
 
 def get_class():
-    return PerfRoundtrip
+    return Perfthroughput

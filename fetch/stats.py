@@ -15,6 +15,7 @@ from models import (
     perffailures,
     perfbuild,
     perfroundtrip,
+    perfthroughput,
 )
 
 stats = [
@@ -26,6 +27,7 @@ stats = [
     perffailures,
     perfbuild,
     perfroundtrip,
+    perfthroughput,
 ]
 
 
