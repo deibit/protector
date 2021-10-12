@@ -1,6 +1,7 @@
 import logging
 import logging.handlers
 import os
+import sys
 
 dirname = os.path.dirname(__file__)
 LOGFILE = os.path.join(dirname, "logs/fetcher.log")
@@ -18,3 +19,4 @@ handler = logging.handlers.RotatingFileHandler(
 formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 handler.setFormatter(formatter)
 logger.addHandler(handler)
+logger.addHandler(logging.StreamHandler(sys.stdout))

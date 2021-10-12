@@ -13,11 +13,11 @@ def _list2dict(obj: dict, fields: list) -> dict:
 
 
 def ingest(
-    entries: list, collection: str, filter_fields: list, init: bool = False
+    entries: list, collection_name: str, filter_fields: list, init: bool = False
 ) -> None:
     try:
         validated = [e for e in entries if e.validate()]
-        collection: Collection = connect()[collection]
+        collection: Collection = connect()[collection_name]
 
         if init:
             collection.insert_many([e.serialize() for e in validated])
@@ -31,7 +31,10 @@ def ingest(
                     upsert=True,
                 )
         logger.info(
-            "Ingested %s/%s entries for %s", len(validated), len(entries), collection
+            "Ingested %s/%s entries for %s",
+            len(validated),
+            len(entries),
+            collection_name,
         )
 
     except Exception as e:
