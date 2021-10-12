@@ -4,55 +4,58 @@ from log import logger
 
 from fetch.models import meta
 
-URL = "https://metrics.torproject.org/torperf.csv?start={}&end={}"
-COLLECTION = "perfttd"
+URL = "https://metrics.torproject.org/onionperf-latencies.csv?start={}&end={}"
+COLLECTION = "perfroundtrip"
 
 
-class PerfTTDEntry:
+class RerfRoundtrip:
     def __init__(
         self,
         date: str,
-        filesize: str,
         source: str,
-        server: str = "",
+        server: str,
+        low: str = "",
         q1: str = "",
         md: str = "",
         q3: str = "",
+        high: str = "",
     ):
         try:
             self.date = dup.parse(date)
-            self.filesize: int = int(filesize) if filesize else None
             self.source: str = source
             self.server: str = server
-            self.q1: float = float(q1) if q1 else None
-            self.md: float = float(md) if md else None
-            self.q3: float = float(q3) if q3 else None
+            self.low: int = int(low) if low else None
+            self.q1: int = int(q1) if q1 else None
+            self.md: int = int(md) if md else None
+            self.q3: int = int(q3) if q3 else None
+            self.high: int = int(high) if high else None
 
         except Exception as e:
             logger.exception(e)
 
     def validate(self) -> bool:
         return (
-            self.filesize
-            and self.source
+            self.source
             and self.server
+            and self.low
             and self.q1
             and self.md
             and self.q3
+            and self.high
         )
 
     def serialize(self) -> dict:
         return self.__dict__
 
 
-def ingest(entries: list[PerfTTDEntry], init=False):
+def ingest(entries: list[RerfRoundtrip], init=False):
     return meta.ingest(
-        entries, COLLECTION, filter_fields=["date", "filesize", "server"], init=init
+        entries, COLLECTION, filter_fields=["date", "source", "server"], init=init
     )
 
 
 def purify(entries: list[str]) -> list[list[str]]:
-    return meta.purify(entries=entries, fields=7, banned=["date", "#"])
+    return meta.purify(entries=entries, fields=8, banned=["date", "#"])
 
 
 def last():
@@ -60,4 +63,4 @@ def last():
 
 
 def get_class():
-    return PerfTTDEntry
+    return RerfRoundtrip

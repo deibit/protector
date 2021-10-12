@@ -14,15 +14,15 @@ class PerfFailuresEntry:
         date: str,
         source: str,
         server: str,
-        timeouts: str = 0,
-        failures: str = 0,
+        timeouts: str = "",
+        failures: str = "",
     ):
         try:
             self.date = dup.parse(date)
             self.source: str = source
             self.server: str = server
-            self.timeouts: str = float(timeouts) if timeouts else None
-            self.failures: str = float(failures) if failures else None
+            self.timeouts: float = float(timeouts) if timeouts else None
+            self.failures: float = float(failures) if failures else None
 
         except Exception as e:
             logger.exception(e)

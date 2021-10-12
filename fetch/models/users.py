@@ -14,9 +14,9 @@ class UsersEntry:
         date: str,
         country: str,
         users: str,
-        lower: str = 0,
-        upper: str = 0,
-        frac: str = 0,
+        lower: str = "",
+        upper: str = "",
+        frac: str = "",
     ):
         try:
             self.date = dup.parse(date)

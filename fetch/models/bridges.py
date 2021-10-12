@@ -14,7 +14,7 @@ class BridgesEntry:
         date: str,
         country: str,
         users: str,
-        frac: str = 0,
+        frac: str = "",
     ):
         try:
             self.date = dup.parse(date)
