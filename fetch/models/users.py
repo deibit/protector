@@ -33,14 +33,7 @@ class UsersEntry:
         return self.country and self.lower and self.upper
 
     def serialize(self) -> dict:
-        return {
-            "date": self.date,
-            "users": self.users,
-            "country": self.country,
-            "lower": self.lower,
-            "upper": self.upper,
-            "frac": self.frac,
-        }
+        self.__dict__
 
 
 def ingest(entries: list[UsersEntry], init=False):

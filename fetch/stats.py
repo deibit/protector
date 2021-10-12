@@ -6,9 +6,9 @@ from dateutil.relativedelta import relativedelta
 from dateutil.utils import today
 
 from log import logger
-from models import users, bandwidth, networksize, bridges
+from models import users, bandwidth, networksize, bridges, perfttd
 
-stats = [users, bandwidth, networksize, bridges]
+stats = [users, bandwidth, networksize, bridges, perfttd]
 
 
 def download(stats_url: str) -> list[str]:

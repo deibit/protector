@@ -27,11 +27,7 @@ class NetworkSizeEntry:
         return self.relays and self.bridges
 
     def serialize(self) -> dict:
-        return {
-            "date": self.date,
-            "relays": self.relays,
-            "bridges": self.bridges,
-        }
+        return self.__dict__
 
 
 def ingest(entries: list[NetworkSizeEntry], init=False):

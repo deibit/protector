@@ -29,12 +29,7 @@ class BridgesEntry:
         return self.country and self.users
 
     def serialize(self) -> dict:
-        return {
-            "date": self.date,
-            "country": self.country,
-            "users": self.users,
-            "frac": self.frac,
-        }
+        return self.__dict__
 
 
 def ingest(entries: list[BridgesEntry], init=False):

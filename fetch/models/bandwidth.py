@@ -27,11 +27,7 @@ class BandwidthEntry:
         return self.date and self.advbw and self.bwhist
 
     def serialize(self) -> dict:
-        return {
-            "date": self.date,
-            "advbw": self.advbw,
-            "bwhist": self.bwhist,
-        }
+        return self.__dict__
 
 
 def ingest(entries: list[BandwidthEntry], init=False):
