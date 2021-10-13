@@ -16,7 +16,7 @@ logger.setLevel(LOG_LEVEL)
 handler = logging.handlers.RotatingFileHandler(
     LOGFILE, maxBytes=(1048576 * 5), backupCount=7
 )
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(filename)s - %(message)s")
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 logger.addHandler(logging.StreamHandler(sys.stdout))
