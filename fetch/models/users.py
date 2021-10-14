@@ -30,15 +30,17 @@ class UsersEntry:
             logger.exception(e)
 
     def validate(self) -> bool:
-        return self.country and self.lower and self.upper
+        return self.country and self.users and self.lower and self.upper
 
     def serialize(self) -> dict:
-        self.__dict__
+        return self.__dict__
 
 
-def ingest(entries: list[UsersEntry], init=False):
+def ingest(entries: list[UsersEntry]):
     return meta.ingest(
-        entries, COLLECTION, filter_fields=["country", "date"], init=init
+        entries=entries,
+        collection_name=COLLECTION,
+        filter_fields=["country", "date"],
     )
 
 

@@ -48,10 +48,8 @@ class PerfRoundtrip:
         return self.__dict__
 
 
-def ingest(entries: list[PerfRoundtrip], init=False):
-    return meta.ingest(
-        entries, COLLECTION, filter_fields=["date", "source", "server"], init=init
-    )
+def ingest(entries: list[PerfRoundtrip]):
+    return meta.ingest(entries, COLLECTION, filter_fields=["date", "source", "server"])
 
 
 def purify(entries: list[str]) -> list[list[str]]:

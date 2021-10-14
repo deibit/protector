@@ -45,9 +45,9 @@ class PerfTTDEntry:
         return self.__dict__
 
 
-def ingest(entries: list[PerfTTDEntry], init=False):
+def ingest(entries: list[PerfTTDEntry]):
     return meta.ingest(
-        entries, COLLECTION, filter_fields=["date", "filesize", "server"], init=init
+        entries, COLLECTION, filter_fields=["date", "filesize", "server"]
     )
 
 

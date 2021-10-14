@@ -34,10 +34,8 @@ class PerfFailuresEntry:
         return self.__dict__
 
 
-def ingest(entries: list[PerfFailuresEntry], init=False):
-    return meta.ingest(
-        entries, COLLECTION, filter_fields=["date", "source", "server"], init=init
-    )
+def ingest(entries: list[PerfFailuresEntry]):
+    return meta.ingest(entries, COLLECTION, filter_fields=["date", "source", "server"])
 
 
 def purify(entries: list[str]) -> list[list[str]]:

@@ -32,10 +32,8 @@ class BridgesEntry:
         return self.__dict__
 
 
-def ingest(entries: list[BridgesEntry], init=False):
-    return meta.ingest(
-        entries, COLLECTION, filter_fields=["country", "date"], init=init
-    )
+def ingest(entries: list[BridgesEntry]):
+    return meta.ingest(entries, COLLECTION, filter_fields=["country", "date"])
 
 
 def purify(entries: list[str]) -> list[list[str]]:

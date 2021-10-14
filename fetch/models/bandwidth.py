@@ -30,12 +30,11 @@ class BandwidthEntry:
         return self.__dict__
 
 
-def ingest(entries: list[BandwidthEntry], init=False):
+def ingest(entries: list[BandwidthEntry]):
     return meta.ingest(
         entries=entries,
-        collection=COLLECTION,
+        collection_name=COLLECTION,
         filter_fields=["date"],
-        init=init,
     )
 
 

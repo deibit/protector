@@ -54,7 +54,6 @@ def download(stats_url: str) -> list[str]:
 if __name__ == "__main__":
     for model in stats:
         logger.info("Processing stats for model %s", model.__name__)
-        init = False
         last = model.last()
 
         if last:
@@ -76,11 +75,11 @@ if __name__ == "__main__":
 
         else:
             logger.info("Downloading complete stats file for %s", model.__name__)
-            init = True
             c = download(model.URL.split("?")[0])
 
         c = model.purify(c)
         if not c:
             logger.info("Nothing to update on %s", model.__name__)
         else:
-            model.ingest([model.get_class()(*entry) for entry in c], init=init)
+            entries = [model.get_class()(*entry) for entry in c]
+            model.ingest(entries)

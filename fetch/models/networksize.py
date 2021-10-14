@@ -30,8 +30,8 @@ class NetworkSizeEntry:
         return self.__dict__
 
 
-def ingest(entries: list[NetworkSizeEntry], init=False):
-    return meta.ingest(entries, COLLECTION, filter_fields=["date"], init=init)
+def ingest(entries: list[NetworkSizeEntry]):
+    return meta.ingest(entries, COLLECTION, filter_fields=["date"])
 
 
 def purify(entries: list[str]) -> list[list[str]]:

@@ -32,8 +32,8 @@ class AppLocaleEntry:
         return self.__dict__
 
 
-def ingest(entries: list[AppLocaleEntry], init=False):
-    return meta.ingest(entries, COLLECTION, filter_fields=["locale", "date"], init=init)
+def ingest(entries: list[AppLocaleEntry]):
+    return meta.ingest(entries, COLLECTION, filter_fields=["locale", "date"])
 
 
 def purify(entries: list[str]) -> list[list[str]]:

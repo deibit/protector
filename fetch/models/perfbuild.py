@@ -36,9 +36,9 @@ class PerfBuild:
         return self.__dict__
 
 
-def ingest(entries: list[PerfBuild], init=False):
+def ingest(entries: list[PerfBuild]):
     return meta.ingest(
-        entries, COLLECTION, filter_fields=["date", "source", "position"], init=init
+        entries, COLLECTION, filter_fields=["date", "source", "position"]
     )
 
 

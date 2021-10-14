@@ -12,24 +12,12 @@ def _list2dict(obj: dict, fields: list) -> dict:
     return tmp
 
 
-def ingest(
-    entries: list, collection_name: str, filter_fields: list, init: bool = False
-) -> None:
+def ingest(entries: list, collection_name: str, filter_fields: list[str]) -> None:
     try:
         validated = [e for e in entries if e.validate()]
         collection: Collection = connect()[collection_name]
+        collection.insert_many([e.serialize() for e in validated])
 
-        if init:
-            collection.insert_many([e.serialize() for e in validated])
-
-        else:
-            for entry in validated:
-                entry = entry.serialize()
-                collection.update_one(
-                    _list2dict(entry, filter_fields),
-                    {"$set": entry},
-                    upsert=True,
-                )
         logger.info(
             "Ingested %s/%s entries for %s",
             len(validated),
