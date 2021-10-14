@@ -5,13 +5,6 @@ from log import logger
 from db import connect
 
 
-def _list2dict(obj: dict, fields: list) -> dict:
-    tmp = {}
-    for field in fields:
-        tmp[field] = obj[field]
-    return tmp
-
-
 def ingest(entries: list, collection_name: str, filter_fields: list[str]) -> None:
     try:
         validated = [e for e in entries if e.validate()]
