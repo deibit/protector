@@ -26,8 +26,8 @@ class NetworkSizeEntry:
     def validate(self) -> bool:
         return self.relays and self.bridges
 
-    def serialize(self) -> dict:
-        return self.__dict__
+    def serialize(self) -> tuple:
+        return tuple(self.__dict__.values())
 
 
 def ingest(entries: list[NetworkSizeEntry]):

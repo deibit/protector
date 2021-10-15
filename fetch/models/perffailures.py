@@ -30,8 +30,8 @@ class PerfFailuresEntry:
     def validate(self) -> bool:
         return self.source and self.server
 
-    def serialize(self) -> dict:
-        return self.__dict__
+    def serialize(self) -> tuple:
+        return tuple(self.__dict__.values())
 
 
 def ingest(entries: list[PerfFailuresEntry]):

@@ -6,31 +6,7 @@ from dateutil.relativedelta import relativedelta
 from dateutil.utils import today
 
 from log import logger
-from models import (
-    users,
-    bandwidth,
-    networksize,
-    bridges,
-    perfttd,
-    perffailures,
-    perfbuild,
-    perfroundtrip,
-    perfthroughput,
-    applocale,
-)
-
-stats = [
-    users,
-    bandwidth,
-    networksize,
-    bridges,
-    perfttd,
-    perffailures,
-    perfbuild,
-    perfroundtrip,
-    perfthroughput,
-    applocale,
-]
+from models import modules
 
 
 def download(stats_url: str) -> list[str]:
@@ -52,7 +28,7 @@ def download(stats_url: str) -> list[str]:
 
 
 if __name__ == "__main__":
-    for model in stats:
+    for model in modules.names:
         logger.info("Processing stats for model %s", model.__name__)
         last = model.last()
 

@@ -1,14 +1,14 @@
 version: "3.3"
 
 services:
-  mongo:
-    image: mongo:4.4.7
-    container_name: protector_mongo
+  mysql:
+    image: mysql:8.0.26
+    container_name: protector_mysql
     env_file: .env
     ports:
-      - 27017:27017
+      - 3306:3306
     volumes:
-      - ./mongodb_data/:/data/db
+      - ./mysqldb/:/var/lib/mysql
 
   grafana:
     image: grafana/grafana:8.2.1

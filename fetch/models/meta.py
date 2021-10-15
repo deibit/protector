@@ -1,33 +1,61 @@
-import pymongo
-from pymongo.collection import Collection
-
 from log import logger
-from db import connect
+
+import db
+
+MAX_SIZE = 10000
+CHUNKS = 10
 
 
-def ingest(entries: list, collection_name: str) -> None:
+def ingest(entries: list, table_name: str) -> None:
     try:
-        validated = [e for e in entries if e.validate()]
-        collection: Collection = connect()[collection_name]
-        collection.insert_many([e.serialize() for e in validated])
+        validated = [e.serialize() for e in entries if e.validate()]
+        length = len(validated)
+        inserted = 0
+
+        con = db.connect()
+        cur = con.cursor()
+
+        if length > MAX_SIZE:
+            logger.info("Due to ingest size commits will be batched")
+            chunk_size = round(length / CHUNKS)
+
+            for index in range(0, CHUNKS):
+                if index == CHUNKS - 1:
+                    shift = None
+                else:
+                    shift = index * chunk_size + chunk_size
+
+                chunk = validated[index * chunk_size : shift]
+
+                cur.executemany(
+                    db.insertions[table_name],
+                    chunk,
+                )
+
+                inserted += cur.rowcount
+                con.commit()
+        else:
+            cur.executemany(db.insertions[table_name], validated)
+            inserted += cur.rowcount
+            con.commit()
 
         logger.info(
-            "Ingested %s/%s entries for %s",
-            len(validated),
+            "Ingested %s/%s entries for %s of %s valid rows",
+            inserted,
             len(entries),
-            collection_name,
+            table_name,
+            length,
         )
 
     except Exception as e:
         logger.exception(e)
 
 
-def last(collection_name: str):
-    collection: Collection = connect()[collection_name]
-    last = collection.find_one({}, limit=1, sort=[("_id", pymongo.DESCENDING)])
-    if last:
-        logger.info("Last entry on %s was %s", collection_name, last["date"])
-    return last
+def last(table: str):
+    c = db.connect()
+    cur = c.cursor(dictionary=True)
+    cur.execute(f"select date from {table} where id=(SELECT MAX(id) from {table});")
+    return cur.fetchone()
 
 
 def purify(entries: list[str], fields: int, banned: list[str]) -> list[list[str]]:

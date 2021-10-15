@@ -8,6 +8,18 @@ URL = "https://metrics.torproject.org/userstats-relay-country.csv?start={}&end={
 COLLECTION = "users"
 
 
+def _str2number(s) -> int:
+    try:
+        result = int(s)
+    except ValueError:
+        try:
+            result = int(float(s))
+        except Exception:
+            result = None
+    finally:
+        return result
+
+
 class UsersEntry:
     def __init__(
         self,
@@ -23,7 +35,7 @@ class UsersEntry:
             self.country = country.upper()
             self.users = int(users)
             self.lower = int(lower) if lower else None
-            self.upper = int(upper) if upper else None
+            self.upper = _str2number(upper)
             self.frac = int(frac) if frac else None
 
         except Exception as e:
@@ -32,14 +44,14 @@ class UsersEntry:
     def validate(self) -> bool:
         return self.country and self.users and self.lower and self.upper
 
-    def serialize(self) -> dict:
-        return self.__dict__
+    def serialize(self) -> tuple:
+        return tuple(self.__dict__.values())
 
 
 def ingest(entries: list[UsersEntry]):
     return meta.ingest(
         entries=entries,
-        collection_name=COLLECTION,
+        table_name=COLLECTION,
     )
 
 

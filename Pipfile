@@ -8,6 +8,7 @@ requests = "*"
 pymongo = "*"
 python-dateutil = "*"
 black = "*"
+mysql-connector-python = "*"
 
 [dev-packages]
 black = "*"

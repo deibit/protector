@@ -28,8 +28,8 @@ class AppLocaleEntry:
     def validate(self) -> bool:
         return self.locale and self.initial_downloads
 
-    def serialize(self) -> dict:
-        return self.__dict__
+    def serialize(self) -> tuple:
+        return tuple(self.__dict__.values())
 
 
 def ingest(entries: list[AppLocaleEntry]):

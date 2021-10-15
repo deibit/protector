@@ -26,14 +26,14 @@ class BandwidthEntry:
     def validate(self) -> bool:
         return self.date and self.advbw and self.bwhist
 
-    def serialize(self) -> dict:
-        return self.__dict__
+    def serialize(self) -> tuple:
+        return tuple(self.__dict__.values())
 
 
 def ingest(entries: list[BandwidthEntry]):
     return meta.ingest(
         entries=entries,
-        collection_name=COLLECTION,
+        table_name=COLLECTION,
     )
 
 

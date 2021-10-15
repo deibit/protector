@@ -32,8 +32,8 @@ class PerfBuild:
     def validate(self) -> bool:
         return self.source and self.position and self.q1 and self.md and self.q3
 
-    def serialize(self) -> dict:
-        return self.__dict__
+    def serialize(self) -> tuple:
+        return tuple(self.__dict__.values())
 
 
 def ingest(entries: list[PerfBuild]):
