@@ -34,7 +34,6 @@ def ingest(entries: list[BandwidthEntry]):
     return meta.ingest(
         entries=entries,
         collection_name=COLLECTION,
-        filter_fields=["date"],
     )
 
 

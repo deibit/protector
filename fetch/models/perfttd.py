@@ -46,9 +46,7 @@ class PerfTTDEntry:
 
 
 def ingest(entries: list[PerfTTDEntry]):
-    return meta.ingest(
-        entries, COLLECTION, filter_fields=["date", "filesize", "server"]
-    )
+    return meta.ingest(entries, COLLECTION)
 
 
 def purify(entries: list[str]) -> list[list[str]]:

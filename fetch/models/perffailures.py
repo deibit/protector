@@ -35,7 +35,7 @@ class PerfFailuresEntry:
 
 
 def ingest(entries: list[PerfFailuresEntry]):
-    return meta.ingest(entries, COLLECTION, filter_fields=["date", "source", "server"])
+    return meta.ingest(entries, COLLECTION)
 
 
 def purify(entries: list[str]) -> list[list[str]]:

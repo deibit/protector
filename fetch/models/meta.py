@@ -5,7 +5,7 @@ from log import logger
 from db import connect
 
 
-def ingest(entries: list, collection_name: str, filter_fields: list[str]) -> None:
+def ingest(entries: list, collection_name: str) -> None:
     try:
         validated = [e for e in entries if e.validate()]
         collection: Collection = connect()[collection_name]

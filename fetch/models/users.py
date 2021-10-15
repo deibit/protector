@@ -40,7 +40,6 @@ def ingest(entries: list[UsersEntry]):
     return meta.ingest(
         entries=entries,
         collection_name=COLLECTION,
-        filter_fields=["country", "date"],
     )
 
 

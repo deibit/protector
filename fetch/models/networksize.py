@@ -31,7 +31,7 @@ class NetworkSizeEntry:
 
 
 def ingest(entries: list[NetworkSizeEntry]):
-    return meta.ingest(entries, COLLECTION, filter_fields=["date"])
+    return meta.ingest(entries, COLLECTION)
 
 
 def purify(entries: list[str]) -> list[list[str]]:

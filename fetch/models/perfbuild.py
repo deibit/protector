@@ -37,9 +37,7 @@ class PerfBuild:
 
 
 def ingest(entries: list[PerfBuild]):
-    return meta.ingest(
-        entries, COLLECTION, filter_fields=["date", "source", "position"]
-    )
+    return meta.ingest(entries, COLLECTION)
 
 
 def purify(entries: list[str]) -> list[list[str]]:

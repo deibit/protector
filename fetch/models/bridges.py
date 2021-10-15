@@ -33,7 +33,7 @@ class BridgesEntry:
 
 
 def ingest(entries: list[BridgesEntry]):
-    return meta.ingest(entries, COLLECTION, filter_fields=["country", "date"])
+    return meta.ingest(entries, COLLECTION)
 
 
 def purify(entries: list[str]) -> list[list[str]]:

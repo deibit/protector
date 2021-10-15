@@ -33,7 +33,7 @@ class AppLocaleEntry:
 
 
 def ingest(entries: list[AppLocaleEntry]):
-    return meta.ingest(entries, COLLECTION, filter_fields=["locale", "date"])
+    return meta.ingest(entries, COLLECTION)
 
 
 def purify(entries: list[str]) -> list[list[str]]:
