@@ -9,6 +9,7 @@ from models import (
     perfthroughput,
     perfttd,
     users,
+    onionservices,
 )
 
 names = [
@@ -22,4 +23,5 @@ names = [
     perfthroughput,
     perfttd,
     users,
+    onionservices,
 ]

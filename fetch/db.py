@@ -34,6 +34,7 @@ tables = {
     "perfthroughput": "CREATE TABLE perfthroughput (id INT AUTO_INCREMENT PRIMARY KEY, date DATETIME, source VARCHAR(100), server VARCHAR(255), low INT, q1 INT, md INT, q3 INT, high INT);",
     "perfttd": "CREATE TABLE perfttd (id INT AUTO_INCREMENT PRIMARY KEY, date DATETIME, filesize INT, source VARCHAR(100), server VARCHAR(255), q1 FLOAT, md FLOAT, q3 FLOAT);",
     "users": "CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, date DATETIME, country VARCHAR(2), users INT, lower INT, upper INT, frac INT);",
+    "onionservices": "CREATE TABLE onionservices (id INT AUTO_INCREMENT PRIMARY KEY, date DATETIME, onions FLOAT, fracs FLOAT);",
 }
 
 insertions = {
@@ -47,28 +48,21 @@ insertions = {
     "perfthroughput": "INSERT INTO perfthroughput (date, source, server, low, q1, md, q3, high) values (%s, %s, %s, %s, %s, %s, %s, %s);",
     "perfttd": "INSERT INTO perfttd (date, filesize, source, server, q1, md, q3) values (%s, %s, %s, %s, %s, %s, %s);",
     "users": "INSERT INTO users (date, country, users, lower, upper, frac) values (%s, %s, %s, %s, %s, %s);",
+    "onionservices": "INSERT INTO onionservices (date, onions, fracs) values (%s, %s, %s);",
 }
 
 
-def _first_run() -> bool:
+def _check_tables() -> bool:
     c = connect()
     cursor = c.cursor(dictionary=True)
-    cursor.execute("SHOW TABLES LIKE 'users';")
-    res = cursor.fetchall()
-    if len(res) > 0:
-        return False
+    table_names = tables.keys()
+    for name in table_names:
+        cursor.execute(f"SHOW TABLES LIKE '{name}';")
+        res = cursor.fetchall()
+        if len(res) == 0:
+            logger.info(f"Table {name} does not exists. Creating.")
+            cursor.execute(tables[name])
     return True
-
-
-def _populate():
-    con = connect()
-    c = con.cursor(dictionary=True)
-    for _, v in tables.items():
-        try:
-            c.execute(v)
-        except Exception:
-            # In case table exists just skip the exception
-            continue
 
 
 def mongo():
@@ -86,8 +80,5 @@ def connect():
         logger.exception(e)
 
 
-logger.info("Checking for database initialization")
-if _first_run():
-    logger.info("Creating all needed tables")
-    _populate()
-logger.info("Tables should be already created")
+logger.info("Creating all needed tables")
+_check_tables()
