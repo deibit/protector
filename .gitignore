@@ -354,5 +354,4 @@ fetch/data/*
 fetch/logs/*
 !fetch/logs/.gitkeep
 
-grafana_data/*
 mysqldb/*
