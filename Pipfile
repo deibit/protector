@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 requests = "*"
-pymongo = "*"
 python-dateutil = "*"
 black = "*"
 mysql-connector-python = "*"

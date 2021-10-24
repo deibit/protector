@@ -1,19 +1,9 @@
 import os
 
-import pymongo
-
 import mysql.connector
 
 from log import logger
 
-mongo_config = {
-    "db": os.environ["MONGO_INITDB_DATABASE"],
-    "username": os.environ["MONGO_INITDB_ROOT_USERNAME"],
-    "password": os.environ["MONGO_INITDB_ROOT_PASSWORD"],
-    "host": os.environ["MONGO_HOST"],
-    "port": os.environ["MONGO_PORT"],
-    "auth_src": "admin",
-}
 
 mysql_config = {
     "host": "127.0.0.1",
@@ -63,14 +53,6 @@ def _check_tables() -> bool:
             logger.info(f"Table {name} does not exists. Creating.")
             cursor.execute(tables[name])
     return True
-
-
-def mongo():
-    return pymongo.MongoClient(
-        "mongodb://{username}:{password}@{host}:{port}/{db}?authSource={auth_src}".format(
-            **mongo_config
-        )
-    ).protector
 
 
 def connect():
