@@ -1,15 +1,13 @@
-import os
-
 import mysql.connector
 
 from log import logger
-
+from utils.env import env
 
 mysql_config = {
     "host": "127.0.0.1",
-    "user": os.environ["MYSQL_USER"],
-    "password": os.environ["MYSQL_PASSWORD"],
-    "database": os.environ["MYSQL_DATABASE"],
+    "user": env.get("MYSQL_USER"),
+    "password": env.get("MYSQL_PASSWORD"),
+    "database": env.get("MYSQL_DATABASE"),
 }
 
 
