@@ -17,3 +17,9 @@ services:
       - 3000:3000
     volumes:
       - ./grafana_data:/var/lib/grafana
+
+  redis:
+    image: redis
+    container_name: protector_redis
+    ports:
+      - 6379:6379
