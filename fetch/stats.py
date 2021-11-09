@@ -5,7 +5,7 @@ import requests
 from dateutil.relativedelta import relativedelta
 from dateutil.utils import today
 
-from log import logger
+from utils.log import logger
 from models import modules
 
 

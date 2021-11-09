@@ -1,6 +1,6 @@
-from log import logger
+from utils.log import logger
 
-import db
+from utils import db
 
 MAX_SIZE = 10000
 CHUNKS = 10

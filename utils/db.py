@@ -1,6 +1,6 @@
 import mysql.connector
 
-from log import logger
+from utils.log import logger
 from utils.env import env
 
 mysql_config = {

@@ -6,7 +6,7 @@ import sys
 from utils.env import env
 
 dirname = os.path.dirname(__file__)
-LOGFILE = os.path.join(dirname, "logs/fetcher.log")
+LOGFILE = os.path.join(dirname, "../logs/protector.log")
 LOG_LEVEL = logging.DEBUG if env.get("DEBUG") else logging.INFO
 
 # Turn off urllib3 logger

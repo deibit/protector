@@ -1,6 +1,6 @@
 import dateutil.parser as dup
 
-from log import logger
+from utils.log import logger
 
 from fetch.models import meta
 
