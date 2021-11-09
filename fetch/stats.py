@@ -7,6 +7,7 @@ from dateutil.utils import today
 
 from utils.log import logger
 from models import modules
+from utils.db import check_tables
 
 
 def download(stats_url: str) -> list[str]:
@@ -28,6 +29,7 @@ def download(stats_url: str) -> list[str]:
 
 
 if __name__ == "__main__":
+    check_tables()
     for model in modules.names:
         logger.info("Processing stats for model %s", model.__name__)
         last = model.last()

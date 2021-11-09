@@ -40,7 +40,8 @@ insertions = {
 }
 
 
-def _check_tables() -> bool:
+def check_tables() -> bool:
+    logger.info("Check needed tables")
     c = connect()
     cursor = c.cursor(dictionary=True)
     table_names = tables.keys()
@@ -58,7 +59,3 @@ def connect():
         return mysql.connector.connect(**mysql_config)
     except Exception as e:
         logger.exception(e)
-
-
-logger.info("Creating all needed tables")
-_check_tables()
