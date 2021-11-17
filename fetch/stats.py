@@ -28,7 +28,7 @@ def download(stats_url: str) -> list[str]:
         logger.exception(e)
 
 
-if __name__ == "__main__":
+def fetch():
     check_tables()
     for model in modules.names:
         logger.info("Processing stats for model %s", model.__name__)
@@ -61,3 +61,7 @@ if __name__ == "__main__":
         else:
             entries = [model.get_class()(*entry) for entry in c]
             model.ingest(entries)
+
+
+if __name__ == "__main__":
+    fetch()
