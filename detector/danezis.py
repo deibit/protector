@@ -11,6 +11,8 @@ from scipy.stats.distributions import poisson
 
 from detector.utils.aux import get_dataframe, get_last_day
 
+from utils.log import logger
+
 
 register_matplotlib_converters()
 
@@ -130,3 +132,7 @@ def get_detections() -> None:
             axis=1,
             args=(name,),
         )
+
+
+if __name__ == "__main__":
+    get_detections()
