@@ -1,4 +1,5 @@
 import sys
+from collections import OrderedDict
 
 from utils.db import connect
 from utils.log import logger
@@ -21,7 +22,7 @@ MIN_USERS = 100
 c = connect()
 
 BRIDGES = "SELECT * FROM protector.bridges WHERE users > 200 AND date > {}"
-USERS = "SELECT date,country,users FROM protector.users WHERE date > %s AND country != '??' ORDER BY date DESC"
+USERS = "SELECT date, country, users FROM protector.users WHERE date > %s AND country != '??' ORDER BY date DESC"
 ONIONSERVICES = "SELECT * FROM protector.bridges WHERE date > {}"
 
 collections = [ONIONSERVICES, BRIDGES, USERS]
@@ -40,7 +41,7 @@ df = pandas.DataFrame(i, columns=["date", "country", "users"])
 
 
 def cap100(df):
-    # Copy and filter countries with less than 100 users on every single day
+    # Filter countries with less than 100 users on every single day
     df2 = df.copy(deep=True)
     df2 = df2.groupby("country").max()
     df2 = df2[df2.users > MIN_USERS]
@@ -51,8 +52,8 @@ def cap100(df):
     return df
 
 
-def add_STL(df):
-    # Apply STL to remove seasonality and adding columns of 'STL_trends' and 'STL_residuals'
+def apply_STL(df):
+    # Apply STL to remove seasonality by adding columns of 'STL_trends' and 'STL_residuals'
     df3 = pandas.DataFrame()
 
     dfg = df.groupby("country")
@@ -61,27 +62,43 @@ def add_STL(df):
             group.set_index("date", inplace=True)
             group = group.resample("M").mean().ffill()
             res = STL(group["users"]).fit()
-            group["residual"] = res.resid
-            group["trend"] = res.trend
+            group["STL_residuals"] = res.resid
+            group["STL_trends"] = res.trend
             # Restore country name
             group["country"] = name
             df3 = df3.append(group)
-        except Exception as e:
+        except Exception:
             pass
             # logger.exception("Error when doing STL over %s", name)
     df3.reset_index(level=0, inplace=True)
     return df3
 
 
-# PCA - select last 180 days records
-start_date = today - rd_180
-end_date = today
-mask = (df["date"] > start_date) & (df["date"] <= end_date)
-mask = df.loc[mask]
-mask = mask.groupby("date")
-# We need an array of (date(index), country_1, country_2...X users)
-for name, group in mask:
-    print(name)
-# pca = PCA(n_components=180)
-# pca = pca.fit(mask)
-# print(pca)
+def pca(df):
+    # PCA - select last 180 days records
+    countries = OrderedDict()
+    df = cap100(df)
+
+    start_date = today - rd_180
+    end_date = today
+
+    mask = (df["date"] >= start_date) & (df["date"] <= end_date)
+    mask = df.loc[mask]
+    mask = mask.groupby("country")
+
+    for name, group in mask:
+        pings = group.users.values.tolist()
+        countries[name] = pandas.Series(pings)
+
+    pca_df = pandas.DataFrame(countries)
+    pca_df = pca_df.fillna(pca_df.mean())
+
+    # pca_df.to_csv("df.csv")
+
+    pca = PCA(n_components=12)
+    pca.fit(pca_df)
+    comps = pca.components_[:12]
+    [print(c) for c in comps[0]]
+
+
+pca(df)
