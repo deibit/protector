@@ -1,10 +1,8 @@
-import sys
 from datetime import datetime
 from typing import Union
 from dateutil.relativedelta import relativedelta
 
 import pandas
-import numpy as np
 from pandas.plotting import register_matplotlib_converters
 import matplotlib.pyplot as plt
 
@@ -19,8 +17,6 @@ register_matplotlib_converters()
 MAX_MODEL_COUNTRIES = 50
 TIME_INTERVAL_DAYS = 7
 TOP_COUNTRIES_INTERVAL = 1
-today = datetime.now()
-week = relativedelta(days=7)
 
 
 def top_countries(
@@ -117,20 +113,20 @@ def set_f_poisson(min_trend, max_trend):
     return poissoned
 
 
-df: pandas.DataFrame = get_dataframe(days=10)
-df = df.pivot_table(index="date", columns="country", values="users")
-# df = df.reset_index()
-# df = df.resample("D", on="date").mean()
-for column in df:
-    df[column] = df[column].fillna(df[column].mean())
+def get_detections() -> None:
+    df: pandas.DataFrame = get_dataframe(days=10)
+    df = df.pivot_table(index="date", columns="country", values="users")
 
-max_trend, min_trend = get_trends(df)
-poisson_f = set_f_poisson(min_trend, max_trend)
+    for column in df:
+        df[column] = df[column].fillna(df[column].mean())
 
-for name, row in df.iteritems():
-    t_range = pandas.concat([row, row.shift(periods=TIME_INTERVAL_DAYS)], axis=1)
-    t_range = t_range.apply(
-        poisson_f,
-        axis=1,
-        args=(name,),
-    )
+    max_trend, min_trend = get_trends(df)
+    poisson_f = set_f_poisson(min_trend, max_trend)
+
+    for name, row in df.iteritems():
+        t_range = pandas.concat([row, row.shift(periods=TIME_INTERVAL_DAYS)], axis=1)
+        t_range = t_range.apply(
+            poisson_f,
+            axis=1,
+            args=(name,),
+        )
