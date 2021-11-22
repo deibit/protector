@@ -4,6 +4,7 @@ from typing import Union
 from dateutil.relativedelta import relativedelta
 
 import pandas
+import numpy as np
 from pandas.plotting import register_matplotlib_converters
 import matplotlib.pyplot as plt
 
@@ -86,34 +87,50 @@ def get_trends(df) -> tuple[pandas.Series]:
 
 
 def set_f_poisson(min_trend, max_trend):
-    def poissoned(df, *args):
-        current_date = df[0]
-        comparison_date = df[1]
-        sys.exit()
-        return None
+    def poissoned(p_df, name):
+        try:
+            current_date = p_df.iloc[[0]]
+            comparison_date = p_df.iloc[[1]]
+
+            current_date_str = current_date.name.date()
+
+            g_min = min_trend[p_df.name]
+            g_max = max_trend[p_df.name]
+
+            min_range = g_min * poisson.ppf(1 - 0.9999, comparison_date)
+            max_range = g_max * poisson.ppf(0.9999, comparison_date)
+
+            the_value = current_date.values[0]
+
+            if current_date.values[0] < min_range:
+                print(
+                    f"[{current_date_str}] down detected in {name} with {the_value} for a min of {min_range}"
+                )
+            if the_value > max_range:
+                print(
+                    f"[{current_date_str}] up detected in {name} with {the_value} for a max of {max_range}"
+                )
+
+        except KeyError:
+            return pandas.Series({"country": name, "min": None, "max": None})
 
     return poissoned
 
 
-df: pandas.DataFrame = get_dataframe(days=30)
+df: pandas.DataFrame = get_dataframe(days=10)
 df = df.pivot_table(index="date", columns="country", values="users")
-df = df.reset_index()
-df = df.resample("D", on="date").mean()
-
-# for column in df:
-#     df[column] = df[column].fillna(df[column].mean())
+# df = df.reset_index()
+# df = df.resample("D", on="date").mean()
+for column in df:
+    df[column] = df[column].fillna(df[column].mean())
 
 max_trend, min_trend = get_trends(df)
 poisson_f = set_f_poisson(min_trend, max_trend)
 
-# print(df)
-
 for name, row in df.iteritems():
     t_range = pandas.concat([row, row.shift(periods=TIME_INTERVAL_DAYS)], axis=1)
-    print(t_range)
     t_range = t_range.apply(
         poisson_f,
         axis=1,
         args=(name,),
     )
-    sys.exit()
