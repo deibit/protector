@@ -1,10 +1,7 @@
-from datetime import datetime
 from typing import Union
 from dateutil.relativedelta import relativedelta
 
 import pandas
-from pandas.plotting import register_matplotlib_converters
-import matplotlib.pyplot as plt
 
 from scipy.stats.distributions import norm
 from scipy.stats.distributions import poisson
@@ -12,13 +9,30 @@ from scipy.stats.distributions import poisson
 from detector.utils.aux import get_dataframe, get_last_day
 
 from utils.log import logger
+from utils.db import insertions, connect
 
-
-register_matplotlib_converters()
 
 MAX_MODEL_COUNTRIES = 50
 TIME_INTERVAL_DAYS = 7
 TOP_COUNTRIES_INTERVAL = 1
+
+
+def insert_alert(date, country, users, trend, max, min, detector="danezis") -> None:
+    c = connect()
+    cursor = c.cursor()
+    cursor.execute(
+        insertions["alerts"],
+        (
+            date,
+            country,
+            users,
+            trend,
+            max,
+            min,
+            detector,
+        ),
+    )
+    c.commit()
 
 
 def top_countries(
@@ -100,13 +114,33 @@ def set_f_poisson(min_trend, max_trend):
 
             the_value = current_date.values[0]
 
-            if current_date.values[0] < min_range:
-                print(
-                    f"[{current_date_str}] down detected in {name} with {the_value} for a min of {min_range}"
+            if the_value < min_range:
+                logger.info(
+                    "[%s] down detected in %s with %s for a min of %s",
+                    current_date_str,
+                    name,
+                    the_value,
+                    min_range,
                 )
+                insert_alert(
+                    current_date.name,
+                    name,
+                    the_value,
+                    "DOWN",
+                    max_range[0],
+                    min_range[0],
+                )
+
             if the_value > max_range:
-                print(
-                    f"[{current_date_str}] up detected in {name} with {the_value} for a max of {max_range}"
+                logger.info(
+                    "[%s] up detected in %s with %s for a max of %s",
+                    current_date_str,
+                    name,
+                    the_value,
+                    max_range,
+                )
+                insert_alert(
+                    current_date.name, name, the_value, "UP", max_range[0], min_range[0]
                 )
 
         except KeyError:

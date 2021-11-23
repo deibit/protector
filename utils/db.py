@@ -23,6 +23,7 @@ tables = {
     "perfttd": "CREATE TABLE perfttd (id INT AUTO_INCREMENT PRIMARY KEY, date DATETIME, filesize INT, source VARCHAR(100), server VARCHAR(255), q1 FLOAT, md FLOAT, q3 FLOAT);",
     "users": "CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, date DATETIME, country VARCHAR(2), users INT, lower INT, upper INT, frac INT);",
     "onionservices": "CREATE TABLE onionservices (id INT AUTO_INCREMENT PRIMARY KEY, date DATETIME, onions FLOAT, fracs FLOAT);",
+    "alerts": "CREATE TABLE alerts (id INT AUTO_INCREMENT PRIMARY KEY, date DATETIME, country VARCHAR(2), users INT, trend VARCHAR(4), max INT, min INT, detector VARCHAR(128), sent BOOLEAN);",
 }
 
 insertions = {
@@ -37,6 +38,12 @@ insertions = {
     "perfttd": "INSERT INTO perfttd (date, filesize, source, server, q1, md, q3) values (%s, %s, %s, %s, %s, %s, %s);",
     "users": "INSERT INTO users (date, country, users, lower, upper, frac) values (%s, %s, %s, %s, %s, %s);",
     "onionservices": "INSERT INTO onionservices (date, onions, fracs) values (%s, %s, %s);",
+    "alerts": "INSERT INTO alerts (date, country, users, trend, max, min, detector, sent) VALUES (%s, %s, %s, %s, %s, %s, %s, FALSE);",
+}
+
+selects = {
+    "users": "SELECT * FROM protector.users WHERE country = %s ORDER BY date DESC LIMIT 180;",
+    "alerts": "SELECT * FROM protector.alerts WHERE country = %s LIMIT 20;",
 }
 
 
