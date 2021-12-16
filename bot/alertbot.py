@@ -47,6 +47,8 @@ from utils.env import env
 from utils.log import logger
 from utils.db import connect, selects
 
+global_id = []
+
 TOKEN = env.get("TELEGRAM_BOT_TOKEN")
 if not TOKEN:
     logger.error("[BOT] has no token set. It should be find in environment variables")
@@ -56,6 +58,36 @@ if not TOKEN:
 def start(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(
         "ProtecTor Bot ready",
+    )
+    global global_id
+    channeld_id = update.effective_chat.id
+    if not channeld_id in global_id:
+        global_id.append(channeld_id)
+
+
+def subscribe(update: Update, context: CallbackContext) -> None:
+    global global_id
+    user = update.message.from_user
+
+    channeld_id = update.effective_chat.id
+    if not channeld_id in global_id:
+        global_id.append(channeld_id)
+    update.message.reply_text(
+        f"Hi {user.username} you have been subscribe to ProtecTor alerts",
+    )
+
+
+def unsubscribe(update: Update, context: CallbackContext) -> None:
+    global global_id
+    user = update.message.from_user
+
+    channeld_id = update.effective_chat.id
+
+    if channeld_id in global_id:
+        global_id.remove(channeld_id)
+
+    update.message.reply_text(
+        f"Hi {user.username} you have been unsubscribe from ProtecTor alerts",
     )
 
 
@@ -106,6 +138,13 @@ def plot_command(update: Update, context: CallbackContext) -> None:
         logger.exception(e)
 
 
+def once(context: CallbackContext) -> None:
+    message = "hola"
+    global global_id
+    for i in global_id:
+        context.bot.send_message(chat_id=i, text=message)
+
+
 def main() -> None:
     updater = Updater(TOKEN)
     dispatcher = updater.dispatcher
@@ -114,6 +153,11 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("alerts", alerts_command, pass_args=True))
     dispatcher.add_handler(CommandHandler("plot", plot_command, pass_args=True))
+    dispatcher.add_handler(CommandHandler("subscribe", subscribe, pass_args=True))
+    dispatcher.add_handler(CommandHandler("unsubscribe", unsubscribe, pass_args=True))
+
+    q = updater.job_queue
+    q.run_repeating(once, 30)
 
     updater.start_polling()
     updater.idle()
