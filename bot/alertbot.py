@@ -3,6 +3,8 @@ import os
 
 from multiprocessing import Process
 
+import flag
+
 
 def plot(country):
     import pandas
@@ -46,6 +48,23 @@ from telegram.ext import Updater, CommandHandler, CallbackContext
 from utils.env import env
 from utils.log import logger
 from utils.db import connect, selects, updates
+
+
+def translate_alert(alerts):
+    """This functions takes a list of alerts tuples and transform them into formatted strings
+    Returns a list of formatted strings
+    """
+    f = lambda x: flag.flag(x[2])
+    d = lambda x: x[1].date()
+    ud = lambda x: "🔼" if x == "UP" else "🔻"
+    n = lambda x: "{0:>6}".format(x)
+    formatted = []
+    for alert in alerts:
+        formatted.append(
+            f"{d(alert)} {f(alert)} {n(alert[3])} {ud(alert[4])} {n(alert[5])} {n(alert[6])} ({alert[7]})\n"
+        )
+    return formatted
+
 
 global_id = []
 
@@ -107,10 +126,8 @@ def alerts_command(update: Update, context: CallbackContext) -> None:
         if not results:
             update.message.reply_text(f"No results yet")
         else:
-            text = []
-            for result in results:
-                text.append("{1} {3} {4} {5} {6}\n".format(*result))
-            update.message.reply_text("".join(text))
+            results = translate_alert(results)
+            update.message.reply_text("".join(results))
 
     except Exception as e:
         logger.exception(e)
@@ -139,6 +156,10 @@ def plot_command(update: Update, context: CallbackContext) -> None:
 
 def once(context: CallbackContext) -> None:
     message = ""
+    global global_id
+    if not global_id:
+        return
+
     try:
         c = connect()
         cursor = c.cursor()
@@ -147,17 +168,14 @@ def once(context: CallbackContext) -> None:
         if not results:
             message = "No alerts so far"
         else:
-            text = []
-            for result in results:
-                text.append("{1} {3} {4} {5} {6}\n".format(*result))
-            message = "".join(text)
-            cursor.execute(updates["newalerts"])
+            results = translate_alert(results)
+            message = "".join(results)
+            cursor.execute(updates["marksentalerts"])
             c.commit()
 
     except Exception as e:
         logger.exception(e)
 
-    global global_id
     for i in global_id:
         context.bot.send_message(chat_id=i, text=message)
 
