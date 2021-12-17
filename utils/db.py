@@ -43,8 +43,11 @@ insertions = {
 
 selects = {
     "users": "SELECT * FROM protector.users WHERE country = %s ORDER BY date DESC LIMIT 180;",
-    "alerts": "SELECT * FROM protector.alerts WHERE country = %s LIMIT 20;",
+    "alerts": "SELECT * FROM protector.alerts LIMIT 20;",
+    "newalerts": "SELECT * FROM protector.alerts WHERE sent = FALSE;",
 }
+
+updates = {"marksentalerts": "UPDATE alerts SET sent = TRUE WHERE sent = FALSE;"}
 
 
 def check_tables() -> bool:
