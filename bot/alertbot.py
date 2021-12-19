@@ -74,10 +74,7 @@ if not TOKEN:
     sys.exit()
 
 
-if env.get("DEBUG"):
-    ALERTS_DELAY = 30
-else:
-    ALERTS_DELAY = 60 * 60 * 2
+ALERTS_INTERVAL = int(env.get("ALERTS_INTERVAL"))
 
 
 def subscribe(update: Update, context: CallbackContext) -> None:
@@ -191,7 +188,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("unsubscribe", unsubscribe))
 
     q = updater.job_queue
-    q.run_repeating(once, ALERTS_DELAY)
+    q.run_repeating(once, ALERTS_INTERVAL)
 
     updater.start_polling()
     updater.idle()

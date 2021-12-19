@@ -1,5 +1,6 @@
 from celery import Celery
 from utils.log import logger
+from utils.env import env
 
 app = Celery(
     "tasks",
@@ -13,7 +14,7 @@ app.control.purge()
 app.conf.beat_schedule = {
     "beats_scheduler": {
         "task": "fetch",
-        "schedule": 60 * 5,  # Minutes
+        "schedule": int(env.get("UPDATE_INTERVAL")),
     }
 }
 

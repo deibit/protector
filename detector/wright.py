@@ -2,7 +2,6 @@ import sys
 from collections import OrderedDict
 
 from utils.db import connect
-from utils.log import logger
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta, MO
@@ -102,3 +101,12 @@ def pca(df):
 
 
 pca(df)
+
+
+def get_detections():
+    # to be implemented
+    pass
+
+
+if __name__ == "__main__":
+    get_detections()

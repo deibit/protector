@@ -8,6 +8,7 @@ from dateutil.utils import today
 
 from utils.log import logger
 from fetch.models import modules
+from detector import detectors
 from utils.db import check_tables
 
 app = celery.current_app
@@ -66,6 +67,11 @@ def fetch():
         else:
             entries = [model.get_class()(*entry) for entry in c]
             model.ingest(entries)
+
+    # Call detectors
+    for detection in detectors.modules:
+        logger.info(f"Calling {detection.__name__} detector")
+        detection.get_detections()
 
 
 if __name__ == "__main__":
