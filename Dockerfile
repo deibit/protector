@@ -1,16 +1,14 @@
-FROM python:3
+FROM python:3.9.9-slim
 
 WORKDIR /usr/src/app
 
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY fetch ./
-COPY bot ./
-COPY utils ./
-COPY start.sh ./
-COPY logs ./
+COPY . .
 
-RUN chmod a+x start.sh
+ENV PYTHONPATH "/usr/src/app"
 
-ENTRYPOINT [ "start.sh" ]
+RUN chmod a+x ./start.sh
+
+CMD ["/bin/sh", "start.sh" ]

@@ -4,8 +4,8 @@ from utils.env import env
 
 app = Celery(
     "tasks",
-    backend="redis://localhost:6379",
-    broker="redis://localhost:6379/0",
+    backend="redis://protector_redis:6379",
+    broker="redis://protector_redis:6379/0",
     include=["fetch.stats"],
 )
 

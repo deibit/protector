@@ -4,7 +4,7 @@ from utils.log import logger
 from utils.env import env
 
 mysql_config = {
-    "host": "127.0.0.1",
+    "host": "protector_mysql",
     "user": env.get("MYSQL_USER"),
     "password": env.get("MYSQL_PASSWORD"),
     "database": env.get("MYSQL_DATABASE"),
@@ -43,8 +43,8 @@ insertions = {
 
 selects = {
     "users": "SELECT * FROM protector.users WHERE country = %s ORDER BY date DESC LIMIT 180;",
-    "alerts": "SELECT * FROM protector.alerts LIMIT 20;",
-    "newalerts": "SELECT * FROM protector.alerts WHERE sent = FALSE;",
+    "alerts": "SELECT * FROM protector.alerts LIMIT 30 ORDER BY date DESC;",
+    "newalerts": "SELECT * FROM protector.alerts WHERE sent = FALSE ORDER BY date DESC;",
 }
 
 updates = {"marksentalerts": "UPDATE alerts SET sent = TRUE WHERE sent = FALSE;"}

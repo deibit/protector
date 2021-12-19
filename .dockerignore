@@ -1,0 +1,15 @@
+__pycache__
+.vscode
+grafana_data
+mysqldb
+tmp
+.dockerignore
+.env_sample
+.gitignore
+celerybeat-schedule
+docker-compose.yml
+Dockerfile
+LICENSE
+README.md
+.DS_Store
+.git
