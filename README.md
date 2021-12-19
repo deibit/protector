@@ -15,6 +15,6 @@ However, it is recommended that the analysis component be extended in the form o
 
 `git clone --depth=1 https://github.com/deibit/protector`
 
-edit `.env_sample and` save as `.env`
+edit `.env_sample` and save as `.env`
 
 `docker-compose up`
