@@ -12,7 +12,6 @@ This work is the result of the assimilation of multiple competences and has been
 However, it is recommended that the analysis component be extended in the form of modules that implement additional anomaly detection algorithms to allow a comparative analysis of the different alerts that may occur.
 
 ## Install
----
 
 `git clone --depth=1 https://github.com/deibit/protector`
 
