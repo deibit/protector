@@ -50,6 +50,10 @@ from utils.log import logger
 from utils.db import connect, selects, updates
 
 
+def header():
+    return "DATE | COUNTRY | VARIATION | TREND | MAX | MIN | DETECTOR\n"
+
+
 def translate_alert(alerts):
     """This functions takes a list of alerts tuples and transform them into formatted strings
     Returns a list of formatted strings
@@ -59,6 +63,7 @@ def translate_alert(alerts):
     ud = lambda x: "🔼" if x == "UP" else "🔻"
     n = lambda x: "{0:>6}".format(x)
     formatted = []
+    formatted.append(header())
     for alert in alerts:
         formatted.append(
             f"{d(alert)} {f(alert)} {n(alert[3])} {ud(alert[4])} {n(alert[5])} {n(alert[6])} ({alert[7]})\n"
