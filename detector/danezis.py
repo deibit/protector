@@ -14,7 +14,10 @@ from utils.db import insertions, connect
 
 MAX_MODEL_COUNTRIES = 50
 TIME_INTERVAL_DAYS = 7
+DETECTION_DAYS_INTERVAL = 10
 TOP_COUNTRIES_INTERVAL = 1
+TOP = 0.9999
+FLOOR = 1 - TOP
 
 
 def insert_alert(date, country, users, trend, max, min, detector="danezis") -> None:
@@ -61,6 +64,14 @@ def top_countries(
 
 
 def get_trends(df) -> tuple[pandas.Series]:
+    """Return a tuple with a series representing the trends
+
+    Args:
+        df (pandas.Dataframe): The dataframe to operated with.
+
+    Returns:
+        tuple[pandas.Series]: A series with the trends
+    """
     countries = top_countries(df)
     trend_df = df.filter(countries)
 
@@ -89,8 +100,8 @@ def get_trends(df) -> tuple[pandas.Series]:
         loc, scale = norm.fit(series)
         return pandas.Series(
             {
-                "max": norm.ppf(0.9999, loc, scale),
-                "min": norm.ppf(1 - 0.9999, loc, scale),
+                "max": norm.ppf(TOP, loc, scale),
+                "min": norm.ppf(FLOOR, loc, scale),
             }
         )
 
@@ -109,8 +120,8 @@ def set_f_poisson(min_trend, max_trend):
             g_min = min_trend[p_df.name]
             g_max = max_trend[p_df.name]
 
-            min_range = g_min * poisson.ppf(1 - 0.9999, comparison_date)
-            max_range = g_max * poisson.ppf(0.9999, comparison_date)
+            min_range = g_min * poisson.ppf(FLOOR, comparison_date)
+            max_range = g_max * poisson.ppf(TOP, comparison_date)
 
             the_value = current_date.values[0]
 
@@ -150,7 +161,7 @@ def set_f_poisson(min_trend, max_trend):
 
 
 def get_detections() -> None:
-    df: pandas.DataFrame = get_dataframe(days=10)
+    df: pandas.DataFrame = get_dataframe(days=DETECTION_DAYS_INTERVAL)
     df = df.pivot_table(index="date", columns="country", values="users")
 
     for column in df:

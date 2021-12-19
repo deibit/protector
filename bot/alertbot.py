@@ -184,7 +184,6 @@ def main() -> None:
     updater = Updater(TOKEN)
     dispatcher = updater.dispatcher
 
-    # dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("alerts", alerts_command))
     dispatcher.add_handler(CommandHandler("plot", plot_command, pass_args=True))

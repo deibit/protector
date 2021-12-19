@@ -1,4 +1,4 @@
-from models import (
+from fetch.models import (
     applocale,
     bandwidth,
     bridges,

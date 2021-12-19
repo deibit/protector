@@ -1,13 +1,17 @@
 import sys
 
 import requests
+import celery
 
 from dateutil.relativedelta import relativedelta
 from dateutil.utils import today
 
 from utils.log import logger
-from models import modules
+from fetch.models import modules
 from utils.db import check_tables
+
+app = celery.current_app
+app.control.purge()
 
 
 def download(stats_url: str) -> list[str]:
@@ -28,6 +32,7 @@ def download(stats_url: str) -> list[str]:
         logger.exception(e)
 
 
+@app.task(ignore_result=True, name="fetch")
 def fetch():
     check_tables()
     for model in modules.names:

@@ -11,6 +11,7 @@ click-didyoumean==0.3.0
 click-plugins==1.1.1
 click-repl==0.2.0
 cycler==0.11.0
+emoji-country-flag
 idna==3.3
 joblib==1.1.0
 kiwisolver==1.3.2
