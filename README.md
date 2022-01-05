@@ -1,6 +1,6 @@
 # ProtecTor
 
-This work aims at implementing an anomaly detection and alerting system for the Tor network. A prototype-oriented, independent component-based design has been used for its development and deployment.
+This work aims at implementing an anomaly detection and alert system for the Tor network. A prototype-oriented, independent component-based design has been used for its development and deployment.
 
 The system is composed of several modules that allow obtaining telemetry data published by the Tor project, processing, storing, and analyzing them through a modular anomaly analysis component and issuing alerts through a bidirectional channel in the form of a bot based on the Telegram platform that, additionally, allows interacting with the system through multiple commands.
 
